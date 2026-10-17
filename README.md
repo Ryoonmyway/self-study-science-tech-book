@@ -45,4 +45,8 @@ pip install markdown pymupdf
 python build.py
 ```
 
-版本号默认取当天日期（例如 `20261017`），也可以用 `--version` 指定。PDF 输出到 `dist/`，不进仓库，发版时上传到 Releases。
+版本号默认取当天日期（例如 `20261017`），也可以用 `--version` 指定。PDF 输出到 `dist/`，不进仓库，发版时上传到 Releases。GitHub 会删掉附件文件名里的中文，上传时改用英文文件名、中文作显示名：
+
+```bash
+gh release upload <tag> "self-study-science-tech-<日期>.pdf#自学科学与技术-<日期>.pdf"
+```
