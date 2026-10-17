@@ -842,4 +842,10 @@ https://github.com/Ryoonmyway/exam-hacker
 
 （这里留个空，用来感谢我未来的对象，等我哪天找到了就把这里填上。）
 
-![读者反馈问卷](assets/feedback-qr.png)
+# 读者反馈
+
+读完了？花两分钟告诉我哪里有用、哪里没用。下一版会根据这些反馈修改。
+
+<img src="assets/feedback-qr.png" alt="读者反馈问卷二维码" width="240">
+
+手机微信扫码，或在微信里长按识别

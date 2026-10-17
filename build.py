@@ -34,11 +34,18 @@ BROWSERS = [
 ]
 
 FEEDBACK_EMBED = re.compile(r"!\[\[[^\]]*读者反馈问卷[^\]]*\]\]")
+FEEDBACK_ASK = "读完了？花两分钟告诉我哪里有用、哪里没用。下一版会根据这些反馈修改。"
+FEEDBACK_HINT = "手机微信扫码，或在微信里长按识别"
+# book.md 里的问卷小节；PDF 另有单独的反馈页，构建 PDF 时会把这一节去掉。
+FEEDBACK_MD = (
+    f"# 读者反馈\n\n{FEEDBACK_ASK}\n\n"
+    f'<img src="{QR}" alt="读者反馈问卷二维码" width="240">\n\n{FEEDBACK_HINT}'
+)
 
 
 def to_book_md(text: str) -> str:
     """Obsidian 写法转成 GitHub 能渲染的 Markdown。"""
-    text = FEEDBACK_EMBED.sub(f"![读者反馈问卷]({QR})", text)
+    text = FEEDBACK_EMBED.sub(lambda _: FEEDBACK_MD, text)
     if "![[" in text:
         sys.exit("书稿里还有未处理的 Obsidian 图片嵌入 ![[...]]，先在 build.py 里加转换规则。")
     return text.rstrip() + "\n"
@@ -74,9 +81,9 @@ def feedback_page() -> str:
     return f"""
 <section class="feedback" id="feedback">
   <h1>读者反馈</h1>
-  <p>读完了？花两分钟告诉我哪里有用、哪里没用。下一版会根据这些反馈修改。</p>
+  <p>{FEEDBACK_ASK}</p>
   <img src="{QR}" alt="读者反馈问卷二维码">
-  <p class="hint">手机微信扫码，或在微信里长按识别</p>
+  <p class="hint">{FEEDBACK_HINT}</p>
 </section>
 """
 
@@ -159,7 +166,7 @@ def toc_html(entries: list[dict], pages: dict[str, int]) -> str:
 
 def build_html(book_md: str, version: str, pages: dict[str, int]) -> tuple[str, list[dict]]:
     # 正文末尾的问卷嵌图由单独的反馈页代替，开头的作者行由版权页代替，避免重复。
-    body_md = book_md.replace(f"![读者反馈问卷]({QR})", "")
+    body_md = book_md.replace(FEEDBACK_MD, "")
     body_md = re.sub(r"\A作者：.*\n", "", body_md)
     md = markdown.Markdown(extensions=["tables", "fenced_code", "toc", "sane_lists"])
     body = md.convert(body_md)
